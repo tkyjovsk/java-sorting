@@ -2,17 +2,17 @@ package tkyjovsk.sorting;
 
 import java.util.Objects;
 
-public class SortKey {
+public class SortingKey {
 
   final String key;
   final boolean ascending;
 
-  public SortKey(String key, boolean ascending) {
+  public SortingKey(String key, boolean ascending) {
     this.key = key;
     this.ascending = ascending;
   }
 
-  public SortKey(String key) {
+  public SortingKey(String key) {
     this(key, true);
   }
 
@@ -22,6 +22,10 @@ public class SortKey {
 
   public boolean isAscending() {
     return ascending;
+  }
+
+  public boolean isDescending() {
+    return !isAscending();
   }
 
   @Override
@@ -42,7 +46,7 @@ public class SortKey {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    final SortKey other = (SortKey) obj;
+    final SortingKey other = (SortingKey) obj;
     return Objects.equals(this.key, other.key);
   }
 

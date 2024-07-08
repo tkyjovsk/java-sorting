@@ -6,7 +6,7 @@ import static tkyjovsk.sorting.Item.AGE;
 import static tkyjovsk.sorting.Item.NAME;
 import tkyjovsk.sorting.ItemComparator;
 import tkyjovsk.sorting.ItemTreeSet;
-import tkyjovsk.sorting.SortKey;
+import tkyjovsk.sorting.SortingKey;
 import static tkyjovsk.sorting.Item.RANK;
 
 /**
@@ -24,7 +24,7 @@ public class TablePanel extends javax.swing.JPanel {
 
   public static void main(String[] args) {
 
-    ItemTreeSet items = new ItemTreeSet(new ItemComparator().clear().add(new SortKey(AGE, false)));;
+    ItemTreeSet items = new ItemTreeSet(new ItemComparator().clear().add(new SortingKey(AGE, false)));;
 
     Item alice = new Item().set(NAME, "Alice").set(AGE, "25").set(RANK, "English");
     Item bob = new Item().set(NAME, "Bob").set(AGE, "20").set(RANK, "Danish");

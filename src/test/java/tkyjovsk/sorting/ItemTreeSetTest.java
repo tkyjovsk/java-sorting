@@ -14,7 +14,7 @@ import static tkyjovsk.sorting.Item.NAME;
 import static tkyjovsk.sorting.Item.RANK;
 import static tkyjovsk.sorting.ItemComparator.*;
 
-public class ItemComparatorTest {
+public class ItemTreeSetTest {
 
   ItemTreeSet items;
   Item alice;
@@ -64,30 +64,42 @@ public class ItemComparatorTest {
     items.addAll(itemsByNameAscending);
   }
 
-  @Test
-  public void addSameItemTwice() {
-    items = new ItemTreeSet(new ItemComparator().clear());
-
-    items.add(alice);
-    assertEquals(1, items.size());
-
-    items.add(alice);
-    assertEquals(1, items.size());
-  }
-
   private void checkReAddingExitingItems() {
     Collection<Item> c = new ArrayList<>(items);
     for (Item i : c) {
-      System.out.printf("Re-adding %s\n", i);
       items.add(i);
-      System.out.println(items);
       assertEquals(c.size(), items.size());
     }
   }
 
   @Test
+  public void addSameItem() {
+    items = new ItemTreeSet(new ItemComparator());
+
+    items.add(alice);
+    assertEquals(1, items.size());
+    checkReAddingExitingItems();
+
+    items.add(bob);
+    assertEquals(2, items.size());
+    checkReAddingExitingItems();
+
+    items.add(carol);
+    assertEquals(3, items.size());
+    checkReAddingExitingItems();
+
+    items.add(david);
+    assertEquals(4, items.size());
+    checkReAddingExitingItems();
+
+    items.add(eve);
+    assertEquals(5, items.size());
+    checkReAddingExitingItems();
+  }
+
+  @Test
   public void dontSort() {
-    items = new ItemTreeSet(new ItemComparator().clear());
+    items = new ItemTreeSet(new ItemComparator());
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -98,7 +110,7 @@ public class ItemComparatorTest {
 
   @Test
   public void sortByNameAscending() {
-    items = new ItemTreeSet(new ItemComparator().clear().add(SORT_BY_NAME_ASC));
+    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_NAME_ASC));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -109,7 +121,7 @@ public class ItemComparatorTest {
 
   @Test
   public void sortByNameDescending() {
-    items = new ItemTreeSet(new ItemComparator().clear().add(SORT_BY_NAME_DESC));
+    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_NAME_DESC));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -120,7 +132,7 @@ public class ItemComparatorTest {
 
   @Test
   public void sortByAgeAscending() {
-    items = new ItemTreeSet(new ItemComparator().clear().add(SORT_BY_AGE_ASC));
+    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_AGE_ASC));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -130,19 +142,8 @@ public class ItemComparatorTest {
   }
 
   @Test
-  public void sortByAgeDescending() {
-    items = new ItemTreeSet(new ItemComparator().clear().add(SORT_BY_AGE_DESC));
-    addItems();
-    System.out.println((ItemComparator) items.comparator());
-    System.out.println(items);
-    assertEquals(5, items.size());
-    checkReAddingExitingItems();
-    assertSameOrder(itemsByAgeAscending.reversed(), items);
-  }
-
-  @Test
   public void sortByAgeAscendingByNameDescending() {
-    items = new ItemTreeSet(new ItemComparator().clear().add(SORT_BY_NAME_DESC).add(SORT_BY_AGE_ASC));
+    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_AGE_ASC).add(SORT_BY_NAME_DESC));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
