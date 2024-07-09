@@ -99,7 +99,7 @@ public class ItemTreeSetTest {
   }
 
   @Test
-  public void dontSort() {
+  public void emptySortingSequence() {
     items = new ItemTreeSet(new ItemComparator());
     addItems();
     System.out.println((ItemComparator) items.comparator());
@@ -111,7 +111,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByNameAscending() {
-    items = new ItemTreeSet(new ItemComparator().add(NAME, ASCENDING));
+    items = new ItemTreeSet(new ItemComparator().sortingBy(NAME, ASCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -122,7 +122,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByNameDescending() {
-    items = new ItemTreeSet(new ItemComparator().add(NAME, DESCENDING));
+    items = new ItemTreeSet(new ItemComparator().sortingBy(NAME, DESCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -133,7 +133,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByAgeAscending() {
-    items = new ItemTreeSet(new ItemComparator().add(AGE, ASCENDING));
+    items = new ItemTreeSet(new ItemComparator().sortingBy(AGE, ASCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -144,7 +144,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByAgeAscendingByNameDescending() {
-    items = new ItemTreeSet(new ItemComparator().add(AGE, ASCENDING).add(NAME, DESCENDING));
+    items = new ItemTreeSet(new ItemComparator().sortingBy(AGE, ASCENDING).sortingBy(NAME, DESCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);

@@ -36,24 +36,24 @@ public class ItemComparator implements Comparator<Item> {
     return this;
   }
 
-  public ItemComparator add(String sortingKey, SortingOrder ascending) {
+  public ItemComparator sortingBy(String sortingKey, SortingOrder sortingOrder) {
     remove(sortingKey);
-    sortingSequence.putLast(sortingKey, ascending);
+    sortingSequence.putLast(sortingKey, sortingOrder);
     return this;
   }
 
-  public ItemComparator add(String sortingKey) {
-    return add(sortingKey, SortingOrder.ASCENDING);
+  public ItemComparator sortingBy(String sortingKey) {
+    return sortingBy(sortingKey, SortingOrder.ASCENDING);
   }
 
-  public ItemComparator addFirst(String sortingKey, SortingOrder ascending) {
+  public ItemComparator firstSortingBy(String sortingKey, SortingOrder sortingOrder) {
     remove(sortingKey);
-    sortingSequence.putFirst(sortingKey, ascending);
+    sortingSequence.putFirst(sortingKey, sortingOrder);
     return this;
   }
 
-  public ItemComparator addFirst(String sortingKey) {
-    return addFirst(sortingKey, SortingOrder.ASCENDING);
+  public ItemComparator firstSortingBy(String sortingKey) {
+    return firstSortingBy(sortingKey, SortingOrder.ASCENDING);
   }
 
   @Override

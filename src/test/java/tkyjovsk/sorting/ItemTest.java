@@ -52,17 +52,17 @@ public class ItemTest {
     Item alice = new Item().set(NAME, "Alice").set(AGE, "25").set(RANK, "4");
     Item alice2 = new Item().set(NAME, "Alice").set(AGE, "25").set(RANK, "4");
 
-    ItemComparator c = new ItemComparator().add(AGE, ASCENDING);
+    ItemComparator c = new ItemComparator().sortingBy(AGE, ASCENDING);
     assertEqual(c, alice, alice2);
 
     Item bob = new Item().set(NAME, "Bob").set(AGE, "20");
     assertLargerThan(c, alice, bob);
 
-    c = new ItemComparator().add(NAME, DESCENDING);
+    c = new ItemComparator().sortingBy(NAME, DESCENDING);
     assertEqual(c, alice, alice2);
     assertLargerThan(c, alice, bob);
 
-    c = new ItemComparator().add(RANK, ASCENDING);
+    c = new ItemComparator().sortingBy(RANK, ASCENDING);
     assertEqual(c, alice, alice2);
     assertLargerThan(c, alice, bob);
   }
@@ -74,7 +74,7 @@ public class ItemTest {
     Item bob = new Item().set(NAME, "Bob").set(AGE, "20");
     Item carol = new Item().set(NAME, "Carol").set(AGE, "30").set(RANK, "2");
 
-    ItemComparator c = new ItemComparator().add(AGE, ASCENDING).add(NAME, ASCENDING);
+    ItemComparator c = new ItemComparator().sortingBy(AGE, ASCENDING).sortingBy(NAME, ASCENDING);
     assertEqual(c, alice, alice2);
     assertEqual(c, bob, bob);
     assertEqual(c, carol, carol);
@@ -82,7 +82,7 @@ public class ItemTest {
     assertLargerThan(c, carol, bob);
     assertLargerThan(c, carol, alice);
 
-    c = new ItemComparator().add(RANK, ASCENDING).add(RANK, ASCENDING);
+    c = new ItemComparator().sortingBy(RANK, ASCENDING).sortingBy(RANK, ASCENDING);
     assertEqual(c, alice, alice2);
     assertEqual(c, bob, bob);
     assertEqual(c, carol, carol);
