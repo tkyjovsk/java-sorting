@@ -3,32 +3,27 @@ package tkyjovsk.sorting;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.SequencedSet;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.SequencedMap;
 import java.util.Set;
-import static tkyjovsk.sorting.Item.AGE;
-import static tkyjovsk.sorting.Item.NAME;
-import static tkyjovsk.sorting.Item.RANK;
 
 public class ItemComparator implements Comparator<Item> {
 
-  public static final SortingKey SORT_BY_NAME_ASC = new SortingKey(NAME);
-  public static final SortingKey SORT_BY_NAME_DESC = new SortingKey(NAME, false);
-  public static final SortingKey SORT_BY_AGE_ASC = new SortingKey(AGE);
-  public static final SortingKey SORT_BY_AGE_DESC = new SortingKey(AGE, false);
-  public static final SortingKey SORT_BY_RANK_ASC = new SortingKey(RANK);
-  public static final SortingKey SORT_BY_RANK_DESC = new SortingKey(RANK, false);
-
-  private final SequencedSet<SortingKey> sortingSequence;
-  private final SequencedSet<SortingKey> sortingSequenceUnmodifiable;
-
-  public ItemComparator(SequencedSet<SortingKey> sorting) {
-    this.sortingSequence = sorting;
-    this.sortingSequenceUnmodifiable = Collections.unmodifiableSequencedSet(this.sortingSequence);
+  public enum SortingOrder {
+    ASCENDING, DESCENDING
   }
 
+  private final SequencedMap<String, SortingOrder> sortingSequence;
+  private final SequencedMap<String, SortingOrder> sortingSequenceUnmodifiable;
+
   public ItemComparator() {
-    this(new LinkedHashSet<>());
+    this.sortingSequence = new LinkedHashMap<>();
+    this.sortingSequenceUnmodifiable = Collections.unmodifiableSequencedMap(this.sortingSequence);
+  }
+
+  public SequencedMap<String, SortingOrder> getSortingSequence() {
+    return sortingSequenceUnmodifiable;
   }
 
   public ItemComparator clear() {
@@ -36,44 +31,59 @@ public class ItemComparator implements Comparator<Item> {
     return this;
   }
 
-  public ItemComparator addFirst(SortingKey key) {
-    sortingSequence.remove(key);
-    sortingSequence.addFirst(key);
+  public ItemComparator remove(String sortingKey) {
+    sortingSequence.remove(sortingKey);
     return this;
   }
 
-  public ItemComparator add(SortingKey key) {
-    sortingSequence.remove(key);
-    sortingSequence.add(key);
+  public ItemComparator add(String sortingKey, SortingOrder ascending) {
+    remove(sortingKey);
+    sortingSequence.putLast(sortingKey, ascending);
     return this;
   }
 
-  public SequencedSet<SortingKey> getSortingSequence() {
-    return sortingSequenceUnmodifiable;
+  public ItemComparator add(String sortingKey) {
+    return add(sortingKey, SortingOrder.ASCENDING);
+  }
+
+  public ItemComparator addFirst(String sortingKey, SortingOrder ascending) {
+    remove(sortingKey);
+    sortingSequence.putFirst(sortingKey, ascending);
+    return this;
+  }
+
+  public ItemComparator addFirst(String sortingKey) {
+    return addFirst(sortingKey, SortingOrder.ASCENDING);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     if (sortingSequence.isEmpty()) {
-      sb.append("Not sorting.");
+      sb.append("Sorting sequence empty.");
     } else {
       sb.append("Sorting");
-      for (SortingKey sk : sortingSequence) {
-        sb.append(" ").append(sk).append(" ");
+      for (Entry<String, SortingOrder> sse : sortingSequence.entrySet()) {
+        sb.append(" by ").append(sse.getKey());
+        sb.append(" ").append(sse.getValue().equals(SortingOrder.ASCENDING) ? "⯅" : "⯆");
       }
     }
     sb.append("\n");
     return sb.toString();
   }
 
-  private int compare(Item i1, Item i2, String key, boolean ascending) {
+  private int compare(Item i1, Item i2, String key, SortingOrder sortingOrder) {
     String v1 = i1.get(key);
     String v2 = i2.get(key);
     int diff = v1 == null
             ? v2 == null ? 0 : -1
             : v2 == null ? 1 : v1.compareTo(v2);
-    return ascending ? diff : -diff;
+    return switch (sortingOrder) {
+      case ASCENDING ->
+        diff;
+      case DESCENDING ->
+        -diff;
+    };
   }
 
   @Override
@@ -81,16 +91,16 @@ public class ItemComparator implements Comparator<Item> {
     int diff = 0;
     Set<String> unsortedKeys = new HashSet<>(i1.keySet());
     unsortedKeys.addAll(i2.keySet());
-    for (SortingKey sk : sortingSequence) {
-      diff = compare(i1, i2, sk.key, sk.ascending);
-      unsortedKeys.remove(sk.key);
+    for (Entry<String, SortingOrder> sse : sortingSequence.entrySet()) {
+      diff = compare(i1, i2, sse.getKey(), sse.getValue());
+      unsortedKeys.remove(sse.getKey());
       if (diff != 0) {
         break;
       }
     }
-    if (diff == 0) { // natural sort for the keys not specified in the sortingSequence sequence
+    if (diff == 0) { // natural ordering for the rest of the keys (those not specified in the sortingSequence)
       for (String key : unsortedKeys) {
-        diff = compare(i1, i2, key, true);
+        diff = compare(i1, i2, key, SortingOrder.ASCENDING);
         if (diff != 0) {
           break;
         }

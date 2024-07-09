@@ -8,10 +8,8 @@ import org.junit.jupiter.api.Test;
 import static tkyjovsk.sorting.Item.AGE;
 import static tkyjovsk.sorting.Item.NAME;
 import static tkyjovsk.sorting.Item.RANK;
-import static tkyjovsk.sorting.ItemComparator.SORT_BY_AGE_ASC;
-import static tkyjovsk.sorting.ItemComparator.SORT_BY_NAME_ASC;
-import static tkyjovsk.sorting.ItemComparator.SORT_BY_NAME_DESC;
-import static tkyjovsk.sorting.ItemComparator.SORT_BY_RANK_ASC;
+import static tkyjovsk.sorting.ItemComparator.SortingOrder.ASCENDING;
+import static tkyjovsk.sorting.ItemComparator.SortingOrder.DESCENDING;
 
 public class ItemTest {
 
@@ -54,17 +52,17 @@ public class ItemTest {
     Item alice = new Item().set(NAME, "Alice").set(AGE, "25").set(RANK, "4");
     Item alice2 = new Item().set(NAME, "Alice").set(AGE, "25").set(RANK, "4");
 
-    ItemComparator c = new ItemComparator().add(SORT_BY_AGE_ASC);
+    ItemComparator c = new ItemComparator().add(AGE, ASCENDING);
     assertEqual(c, alice, alice2);
 
     Item bob = new Item().set(NAME, "Bob").set(AGE, "20");
     assertLargerThan(c, alice, bob);
 
-    c = new ItemComparator().add(SORT_BY_NAME_DESC);
+    c = new ItemComparator().add(NAME, DESCENDING);
     assertEqual(c, alice, alice2);
     assertLargerThan(c, alice, bob);
 
-    c = new ItemComparator().add(SORT_BY_RANK_ASC);
+    c = new ItemComparator().add(RANK, ASCENDING);
     assertEqual(c, alice, alice2);
     assertLargerThan(c, alice, bob);
   }
@@ -76,7 +74,7 @@ public class ItemTest {
     Item bob = new Item().set(NAME, "Bob").set(AGE, "20");
     Item carol = new Item().set(NAME, "Carol").set(AGE, "30").set(RANK, "2");
 
-    ItemComparator c = new ItemComparator().add(SORT_BY_AGE_ASC).add(SORT_BY_NAME_ASC);
+    ItemComparator c = new ItemComparator().add(AGE, ASCENDING).add(NAME, ASCENDING);
     assertEqual(c, alice, alice2);
     assertEqual(c, bob, bob);
     assertEqual(c, carol, carol);
@@ -84,7 +82,7 @@ public class ItemTest {
     assertLargerThan(c, carol, bob);
     assertLargerThan(c, carol, alice);
 
-    c = new ItemComparator().add(SORT_BY_RANK_ASC).add(SORT_BY_RANK_ASC);
+    c = new ItemComparator().add(RANK, ASCENDING).add(RANK, ASCENDING);
     assertEqual(c, alice, alice2);
     assertEqual(c, bob, bob);
     assertEqual(c, carol, carol);

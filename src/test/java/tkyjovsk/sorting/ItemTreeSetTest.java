@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import static tkyjovsk.sorting.Item.AGE;
 import static tkyjovsk.sorting.Item.NAME;
 import static tkyjovsk.sorting.Item.RANK;
-import static tkyjovsk.sorting.ItemComparator.*;
+import static tkyjovsk.sorting.ItemComparator.SortingOrder.ASCENDING;
+import static tkyjovsk.sorting.ItemComparator.SortingOrder.DESCENDING;
 
 public class ItemTreeSetTest {
 
@@ -110,7 +111,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByNameAscending() {
-    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_NAME_ASC));
+    items = new ItemTreeSet(new ItemComparator().add(NAME, ASCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -121,7 +122,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByNameDescending() {
-    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_NAME_DESC));
+    items = new ItemTreeSet(new ItemComparator().add(NAME, DESCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -132,7 +133,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByAgeAscending() {
-    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_AGE_ASC));
+    items = new ItemTreeSet(new ItemComparator().add(AGE, ASCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
@@ -143,7 +144,7 @@ public class ItemTreeSetTest {
 
   @Test
   public void sortByAgeAscendingByNameDescending() {
-    items = new ItemTreeSet(new ItemComparator().add(SORT_BY_AGE_ASC).add(SORT_BY_NAME_DESC));
+    items = new ItemTreeSet(new ItemComparator().add(AGE, ASCENDING).add(NAME, DESCENDING));
     addItems();
     System.out.println((ItemComparator) items.comparator());
     System.out.println(items);
