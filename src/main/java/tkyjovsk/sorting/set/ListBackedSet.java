@@ -34,6 +34,7 @@ public class ListBackedSet<T extends Comparable<T>> implements Set<T> {
       list.add(-index - 1, item);
     }
     return added;
+//    return !list.contains(item) && list.add(item);
   }
 
   @Override
@@ -52,6 +53,7 @@ public class ListBackedSet<T extends Comparable<T>> implements Set<T> {
     try {
       contains = Collections.binarySearch(list, (T) o, comparator) >= 0;
     } catch (ClassCastException cce) {
+      // ignore
     }
     return contains;
   }
@@ -73,7 +75,16 @@ public class ListBackedSet<T extends Comparable<T>> implements Set<T> {
 
   @Override
   public boolean remove(Object o) {
-    return list.remove(o);
+    boolean removed = false;
+    try {
+      int index = Collections.binarySearch(list, (T) o, comparator);
+      if (index >= 0) {
+        list.remove(index);
+      }
+    } catch (ClassCastException cce) {
+      // ignore
+    }
+    return removed;
   }
 
   @Override

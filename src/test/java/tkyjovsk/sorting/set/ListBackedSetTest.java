@@ -3,12 +3,14 @@ package tkyjovsk.sorting.set;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
@@ -19,29 +21,36 @@ public class ListBackedSetTest {
   }
 
   @Test
-  public void testRandomUUIDs() {
-    Set<String> hashset = new HashSet<>();
+  public void addRandomUUIDs() {
+    Set<String> treeset = new TreeSet<>();
     Set<String> lbset = new ListBackedSet<>((String s1, String s2) -> s1.compareTo(s2));
-    int n = 10;
+    int n = 10_000;
+    System.out.printf("Inserting %s random items\n", n);
     for (int i = 0; i < n; i++) {
       String s = UUID.randomUUID().toString();
-      hashset.add(s);
+      treeset.add(s);
       lbset.add(s);
-      assertEquals(hashset.size(), lbset.size());
+      assertEquals(treeset.size(), lbset.size());
     }
-    System.out.println("Control Set:");
-    print(hashset);
-    System.out.println("Tested Set:");
-    print(lbset);
-    assertEquals(hashset, lbset);
+//    System.out.println("Control Set:");
+//    print(hashset);
+//    System.out.println("Tested Set:");
+//    print(lbset);
+    Iterator<String> tsi = treeset.iterator();
+    Iterator<String> lbsi = lbset.iterator();
+    while(tsi.hasNext()) {
+      assertTrue(lbsi.hasNext());
+      assertEquals(tsi.next(), lbsi.next());
+    }
   }
 
   @Test
-  public void testRandomUUIDsWithDuplicates() {
+  public void addRandomUUIDsWithDuplicates() {
     List<String> list = new ArrayList<>();
     Set<String> hashset = new HashSet<>();
     Set<String> lbset = new ListBackedSet<>((String s1, String s2) -> s1.compareTo(s2));
-    int n = 10;
+    int n = 10_000;
+    System.out.printf("Inserting %s random items\n", n);
     for (int i = 0; i < n; i++) {
       String s = UUID.randomUUID().toString();
       if (hashset.add(s)) {
@@ -61,10 +70,10 @@ public class ListBackedSetTest {
       lbset.add(duplicate);
       assertEquals(hashset.size(), lbset.size());
     }
-    System.out.println("Control Set:");
-    print(hashset);
-    System.out.println("Tested Set:");
-    print(lbset);
+//    System.out.println("Control Set:");
+//    print(hashset);
+//    System.out.println("Tested Set:");
+//    print(lbset);
     assertEquals(hashset, lbset);
   }
 
@@ -81,7 +90,7 @@ public class ListBackedSetTest {
     int nPerBucket = n / buckets;
     long[] treesetNanos = new long[buckets];
     long[] lbsetNanos = new long[buckets];
-    System.out.printf("Initializing %s items. Measuring time per one add() operation.\n", n);
+    System.out.printf("Initializing %s items.\n", n);
     System.out.println("Items,TreeSet<String>.add() (ns),ListBackedSet<String>.add() (ns)");
     for (int b = 0; b < buckets; b++) {
       for (int i = 0; i < nPerBucket; i++) {
@@ -95,6 +104,7 @@ public class ListBackedSetTest {
       }
       System.out.printf("%s,%s,%s\n", (b + 1) * nPerBucket, treesetNanos[b] / nPerBucket, lbsetNanos[b] / nPerBucket);
     }
+    System.out.printf("Measuring time per one remove() operation.\n", n);
     System.out.println("Items,TreeSet<String>.remove() (ns),ListBackedSet<String>.remove() (ns)");
     for (int rb = 0; rb < buckets; rb++) {
       int b = buckets - rb - 1;
